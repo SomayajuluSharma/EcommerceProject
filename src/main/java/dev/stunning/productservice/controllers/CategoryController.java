@@ -1,10 +1,17 @@
 package dev.stunning.productservice.controllers;
 
 import dev.stunning.productservice.Service.CategoryService;
-import org.springframework.stereotype.Service;
+import dev.stunning.productservice.dtos.CategoryDto;
+import dev.stunning.productservice.dtos.GetSingleCategory;
+import dev.stunning.productservice.models.Category;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @RestController
 
@@ -17,13 +24,17 @@ public class CategoryController {
     }
 
     @GetMapping("/products/categories")
-    public String getAllCategories() {
-        return "Getting All Categories";
+    public CategoryDto getAllCategories() {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setCategories(categoryService.getAllCategories());
+    //    ResponseEntity<CategoryDto> responseEntity = new ResponseEntity(categoryDto, HttpStatus.OK);
+        return categoryDto;
     }
 
-    @GetMapping("/products/category/{categoryId}")
-    public String getProductsInCategory(@PathVariable("categoryId") Long categoryId) {
-        return "Getting Products in Category " + categoryId;
+    @GetMapping("/products/category/{categoryName}")
+    public ResponseEntity<GetSingleCategory> getProductsInCategory(@PathVariable("categoryName") String categoryName) {
+        GetSingleCategory responseDto = new GetSingleCategory();
+        responseDto.setCategory(categoryService.getProductsInCategory(categoryName));
+        return new ResponseEntity(responseDto, HttpStatus.OK);
     }
-
 }
