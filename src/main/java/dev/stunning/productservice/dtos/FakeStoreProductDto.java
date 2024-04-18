@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class FakeStoreProductDto {
+public class Product {
     private Long id;
     private String title;
     private double price;
