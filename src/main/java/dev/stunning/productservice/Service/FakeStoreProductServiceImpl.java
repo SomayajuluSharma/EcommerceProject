@@ -52,7 +52,7 @@ public class FakeStoreProductServiceImpl implements ProductService{
         return product;
     }
     @Override
-    public List<dev.stunning.productservice.models.Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto[]> l = restTemplate.getForEntity("https://fakestoreapi.com/products", FakeStoreProductDto[].class);
         List<Product> answer = new ArrayList<>();
@@ -63,18 +63,21 @@ public class FakeStoreProductServiceImpl implements ProductService{
     }
 
     @Override
-    public dev.stunning.productservice.models.Product getSingleProduct(Long productId) {
+    public Optional<Product> getSingleProduct(Long productId) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity("https://fakestoreapi.com/products/{id}", FakeStoreProductDto.class, productId);
         //(url,returnType,params_in_url)
         FakeStoreProductDto productDto = response.getBody();
 
+        if(productDto == null){
+            return Optional.empty();
+        }
 
-        return convertFakeStoreProductDtoToProduct(productDto);
+        return Optional.of(convertFakeStoreProductDtoToProduct(productDto));
     }
 
     @Override
-    public dev.stunning.productservice.models.Product addNewProduct(ProductDto product) {
+    public Product addNewProduct(ProductDto product) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response = restTemplate.postForEntity(
                 "https://fakestoreapi.com/products",
@@ -86,7 +89,7 @@ public class FakeStoreProductServiceImpl implements ProductService{
     }
 
     @Override
-    public dev.stunning.productservice.models.Product updateProduct(Long productId, dev.stunning.productservice.models.Product product){
+    public Product updateProduct(Long productId, dev.stunning.productservice.models.Product product){
 
         RestTemplate restTemplate = restTemplateBuilder.requestFactory(HttpComponentsClientHttpRequestFactory.class).build();
 
@@ -110,7 +113,7 @@ public class FakeStoreProductServiceImpl implements ProductService{
     }
 
     @Override
-    public dev.stunning.productservice.models.Product replaceProduct(Long ProductId, dev.stunning.productservice.models.Product product) {
+    public Product replaceProduct(Long ProductId, dev.stunning.productservice.models.Product product) {
         FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
         fakeStoreProductDto.setDescription(product.getDescription());
         fakeStoreProductDto.setCategory(product.getCategory().getName());
@@ -129,7 +132,7 @@ public class FakeStoreProductServiceImpl implements ProductService{
     }
 
     @Override
-    public dev.stunning.productservice.models.Product deleteProduct(Long productId) {
+    public Product deleteProduct(Long productId) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response  = requestForEntity(
                 HttpMethod.DELETE,
