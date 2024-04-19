@@ -8,6 +8,7 @@ import dev.stunning.productservice.dtos.GetSingleProductResponseDto;
 import dev.stunning.productservice.dtos.ProductDto;
 import dev.stunning.productservice.models.Category;
 import dev.stunning.productservice.models.Product;
+import dev.stunning.productservice.repositories.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -22,10 +23,13 @@ import java.util.OptionalInt;
 @RequestMapping("/products")
 public class ProductController {
 
-    private ProductService productService;
 
-    public ProductController(ProductService productService) {
+    private ProductService productService;
+    private ProductRepository productRepository;
+
+    public ProductController(ProductService productService,ProductRepository productRepository) {
         this.productService = productService;
+        this.productRepository = productRepository;
     }
 
     @GetMapping("")
@@ -36,7 +40,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<Product> getSingleProoduct(@PathVariable("productId") Long productId) throws NotFoundException{
         //GetSingleProductResponseDto responseDto = new GetSingleProductResponseDto();
-       // responseDto.setProduct(productService.getSingleProduct(productId));
+        //responseDto.setProduct(productService.getSingleProduct(productId));
 
         MultiValueMap<String,String> headers = new LinkedMultiValueMap();
 
@@ -55,14 +59,21 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PostMapping()
-    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto product) {
+    @PostMapping("")
+    public ResponseEntity<Product> addProduct(@RequestBody ProductDto product) {
 
         MultiValueMap<String,String> headers = new LinkedMultiValueMap();
         headers.add("auth-token","SuccessFullyAddedProduct");
 
-        Product newProduct = productService.addNewProduct(product);
-        ResponseEntity<ProductDto> responseEntity = new ResponseEntity(
+        //Product newProduct = productService.addNewProduct(product);
+        Product newProduct = new Product();
+        newProduct.setId(product.getId());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setTitle(product.getTitle());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setImageUrl(product.getImage());
+        newProduct = productRepository.save(newProduct);
+        ResponseEntity<Product> responseEntity = new ResponseEntity(
                 newProduct,
                 headers,
                 HttpStatus.CREATED
@@ -73,6 +84,7 @@ public class ProductController {
         //        HttpStatus.CREATED
         //);
         return responseEntity;
+        //return null;
     }
 
     @PatchMapping("/{productId}")

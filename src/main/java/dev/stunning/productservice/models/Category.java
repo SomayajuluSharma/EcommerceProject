@@ -1,5 +1,6 @@
 package dev.stunning.productservice.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Category extends BaseModel{
+public class  Category extends BaseModel{
     private String name;
     private String description;
     @OneToMany(mappedBy = "category")
