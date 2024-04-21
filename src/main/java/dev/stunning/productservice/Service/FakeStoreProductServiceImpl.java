@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.*;
 
-@Service
+//@Service
 public class FakeStoreProductServiceImpl implements ProductService{
     private RestTemplateBuilder restTemplateBuilder;
 
@@ -77,7 +77,7 @@ public class FakeStoreProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product addNewProduct(ProductDto product) {
+    public Product addNewProduct(Product product) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response = restTemplate.postForEntity(
                 "https://fakestoreapi.com/products",

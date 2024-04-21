@@ -117,6 +117,7 @@ public class ProductController {
     public Product deleteProduct(@PathVariable("productId") Long productId) {
         Product product = new Product();
         product.setId(productId);
-        return productService.deleteProduct(productId);
+       // return productService.deleteProduct(productId);
+        return null;
     }
 }

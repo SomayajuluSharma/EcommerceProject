@@ -6,8 +6,6 @@ import dev.stunning.productservice.InheritanceExample.MappedSuperClass.MSMentorR
 import dev.stunning.productservice.InheritanceExample.SingleClass.SCMentorRepository;
 import dev.stunning.productservice.InheritanceExample.SingleClass.SCUserRepository;
 import dev.stunning.productservice.InheritanceExample.JoinedTable.Mentor;
-import dev.stunning.productservice.InheritanceExample.TablePerClass.TPCMentorRepository;
-import dev.stunning.productservice.InheritanceExample.TablePerClass.TPCUserRepository;
 import dev.stunning.productservice.InheritanceExample.JoinedTable.User;
 import jakarta.persistence.MappedSuperclass;
 import org.junit.jupiter.api.Test;
