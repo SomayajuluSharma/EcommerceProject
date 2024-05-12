@@ -10,7 +10,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     Product save(Product product);
     Product findProductById(Long id);
     Product deleteProductById(Long id);
-    Product updateProductById(Long id);
 
     @Query(value = Queries.Bring_Product_By_id, nativeQuery = true)
     List<ProductDBDto> bringProductById(Long id);

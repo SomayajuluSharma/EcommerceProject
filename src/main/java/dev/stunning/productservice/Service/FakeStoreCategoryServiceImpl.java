@@ -4,6 +4,7 @@ import dev.stunning.productservice.dtos.FakeStoreProductDto;
 import dev.stunning.productservice.models.Category;
 import dev.stunning.productservice.models.Product;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //@Service
+//@Primary
 public class FakeStoreCategoryServiceImpl implements CategoryService{
 
     private RestTemplateBuilder restTemplateBuilder;

@@ -4,12 +4,14 @@ import dev.stunning.productservice.Exceptions.NotFoundException;
 import dev.stunning.productservice.dtos.ProductDto;
 import dev.stunning.productservice.models.Product;
 import dev.stunning.productservice.repositories.ProductRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+//@Primary
 public class SelfProductService implements ProductService{
 
    private  ProductRepository productRepository;

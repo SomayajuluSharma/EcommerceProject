@@ -1,23 +1,24 @@
 package dev.stunning.productservice.controllers;
 
-import dev.stunning.productservice.dtos.ErrorResponseDto;
+import dev.stunning.productservice.AuthenticationClient.AuthClient;
+import dev.stunning.productservice.AuthenticationClient.dtos.Role;
+import dev.stunning.productservice.AuthenticationClient.dtos.SessionStatus;
+import dev.stunning.productservice.AuthenticationClient.dtos.ValidateTokenResponseDto;
 import dev.stunning.productservice.Exceptions.NotFoundException;
 import dev.stunning.productservice.Service.ProductService;
-import dev.stunning.productservice.dtos.GetSingleCategory;
-import dev.stunning.productservice.dtos.GetSingleProductResponseDto;
 import dev.stunning.productservice.dtos.ProductDto;
 import dev.stunning.productservice.models.Category;
 import dev.stunning.productservice.models.Product;
 import dev.stunning.productservice.repositories.ProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 @RestController
 @RequestMapping("/products")
@@ -26,19 +27,41 @@ public class ProductController {
 
     private ProductService productService;
     private ProductRepository productRepository;
+    private AuthClient authClient;
 
-    public ProductController(ProductService productService,ProductRepository productRepository) {
+    public ProductController(ProductService productService,ProductRepository productRepository, AuthClient authClient) {
         this.productService = productService;
         this.productRepository = productRepository;
+        this.authClient = authClient;
     }
 
     @GetMapping("")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts(@Nullable @RequestHeader("AUTH_TOKEN") String token, @Nullable @RequestHeader("User_ID") Long userId) {
+        if (token == null || userId == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        ValidateTokenResponseDto response = authClient.validate(token, userId);
+        if (response.getSessionStatus().equals(SessionStatus.INVALID)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        boolean isUserAdmin = false;
+        for (Role role : response.getUserDto().getRoles()) {
+            if (role.getName().equals("ADMIN")) {
+                isUserAdmin = true;
+                break;
+            }
+        }
+        if (!isUserAdmin) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        List<Product> products = productService.getAllProducts();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+
     @GetMapping("/{productId}")
-    public ResponseEntity<Product> getSingleProoduct(@PathVariable("productId") Long productId) throws NotFoundException{
+    public ResponseEntity<Product> getSingleProduct(@PathVariable("productId") Long productId) throws NotFoundException{
         //GetSingleProductResponseDto responseDto = new GetSingleProductResponseDto();
         //responseDto.setProduct(productService.getSingleProduct(productId));
 
@@ -60,35 +83,23 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Product> addProduct(@RequestBody ProductDto product) {
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
 
         MultiValueMap<String,String> headers = new LinkedMultiValueMap();
         headers.add("auth-token","SuccessFullyAddedProduct");
 
+        Product newProduct = productService.addNewProduct(product);
         //Product newProduct = productService.addNewProduct(product);
-        Product newProduct = new Product();
-        newProduct.setId(product.getId());
-        newProduct.setDescription(product.getDescription());
-        newProduct.setTitle(product.getTitle());
-        newProduct.setPrice(product.getPrice());
-        newProduct.setImageUrl(product.getImage());
-        newProduct = productRepository.save(newProduct);
         ResponseEntity<Product> responseEntity = new ResponseEntity(
                 newProduct,
-                headers,
                 HttpStatus.CREATED
         );
-        //Product newProduct = productService.addNewProduct(product);
-        //ResponseEntity<Product> responseEntity = new ResponseEntity(
-        //        newProduct,
-        //        HttpStatus.CREATED
-        //);
         return responseEntity;
         //return null;
     }
 
     @PatchMapping("/{productId}")
-    public Product updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductDto productDto){
+    public Optional<Product> updateProduct(@PathVariable("productId") Long productId, @RequestBody ProductDto productDto) throws NotFoundException{
         Product product = new Product();
         product.setId(productDto.getId());
         product.setCategory(new Category());
@@ -97,7 +108,8 @@ public class ProductController {
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
 
-        return productService.updateProduct(productId, product);
+        Optional<Product> optionalProduct = Optional.ofNullable(productService.updateProduct(productId, product));
+        return optionalProduct;
     }
 
     @PutMapping("/{productId}")

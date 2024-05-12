@@ -5,6 +5,7 @@ import dev.stunning.productservice.dtos.ProductDto;
 import dev.stunning.productservice.models.Category;
 import dev.stunning.productservice.models.Product;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -18,7 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.*;
 
-//@Service
+@Service
+@Primary
 public class FakeStoreProductServiceImpl implements ProductService{
     private RestTemplateBuilder restTemplateBuilder;
 
@@ -89,7 +91,7 @@ public class FakeStoreProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Long productId, dev.stunning.productservice.models.Product product){
+    public Product updateProduct(Long productId, Product product){
 
         RestTemplate restTemplate = restTemplateBuilder.requestFactory(HttpComponentsClientHttpRequestFactory.class).build();
 
