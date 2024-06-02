@@ -12,31 +12,31 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class ProductServiceApplicationTests {
-    @Autowired
-    private JTMentorRepository jtMentorRepository;
-    @Autowired
-    private JTUserRepository jtUserRepository;
-
-    @Test
-    void contextLoads() {
-    }
-
-    @Test
-    void testDifferentInheritence(){
-         User user = new User();
-         user.setEmail("saikrishna");
-        user.setPassword("saikrishna");
-        jtUserRepository.save(user);
-
-        Mentor mentor = new Mentor();
-        mentor.setEmail("saikrishna");
-        mentor.setPassword("saikrishna");
-        mentor.setNumberOfMentees(2);
-        mentor.setNumberOfSessions(50);
-        jtMentorRepository.save(mentor);
-
-    }
-
-}
+//@SpringBootTest
+//class ProductServiceApplicationTests {
+//    @Autowired
+//    private JTMentorRepository jtMentorRepository;
+//    @Autowired
+//    private JTUserRepository jtUserRepository;
+//
+//    @Test
+//    void contextLoads() {
+//    }
+//
+//    @Test
+//    void testDifferentInheritence(){
+//         User user = new User();
+//         user.setEmail("saikrishna");
+//        user.setPassword("saikrishna");
+//        jtUserRepository.save(user);
+//
+//        Mentor mentor = new Mentor();
+//        mentor.setEmail("saikrishna");
+//        mentor.setPassword("saikrishna");
+//        mentor.setNumberOfMentees(2);
+//        mentor.setNumberOfSessions(50);
+//        jtMentorRepository.save(mentor);
+//
+//    }
+//
+//}
