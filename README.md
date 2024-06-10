@@ -32,8 +32,7 @@ This project is a full-fledged E-commerce platform built with multiple microserv
 
 To get a local copy up and running, follow these steps:
 
-1. Clone the repository
-   git clone https://github.com/SomayajuluSharma/EcommerceProject.git
-2.Navigate to the project directory
+1. Clone the repository git clone https://github.com/SomayajuluSharma/EcommerceProject.git
+2. 2.Navigate to the project directory
 ed EcommerceProject
   
