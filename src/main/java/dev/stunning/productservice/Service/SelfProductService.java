@@ -1,17 +1,19 @@
 package dev.stunning.productservice.Service;
 
 import dev.stunning.productservice.Exceptions.NotFoundException;
-import dev.stunning.productservice.dtos.ProductDto;
 import dev.stunning.productservice.models.Product;
-import dev.stunning.productservice.repositories.ProductRepository;
+import dev.stunning.productservice.repositories.products.ProductRepository;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-//@Primary
+@Primary
 public class SelfProductService implements ProductService{
 
    private  ProductRepository productRepository;
@@ -23,6 +25,13 @@ public class SelfProductService implements ProductService{
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+    public Page<Product> getProducts(int numberOfProducts, int offset){
+        Page<Product> products = productRepository.findAll(PageRequest.of( (offset/numberOfProducts), numberOfProducts,
+                Sort.by("price").descending()
+                        .and(Sort.by("title").ascending())));
+
+        return products;
     }
 
     @Override

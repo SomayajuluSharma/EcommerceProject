@@ -1,15 +1,14 @@
 package dev.stunning.productservice.controllers;
 
 import dev.stunning.productservice.AuthenticationClient.AuthClient;
-import dev.stunning.productservice.AuthenticationClient.dtos.Role;
-import dev.stunning.productservice.AuthenticationClient.dtos.SessionStatus;
-import dev.stunning.productservice.AuthenticationClient.dtos.ValidateTokenResponseDto;
 import dev.stunning.productservice.Exceptions.NotFoundException;
 import dev.stunning.productservice.Service.ProductService;
 import dev.stunning.productservice.dtos.ProductDto;
+import dev.stunning.productservice.dtos.getProductsDto;
 import dev.stunning.productservice.models.Category;
 import dev.stunning.productservice.models.Product;
-import dev.stunning.productservice.repositories.ProductRepository;
+import dev.stunning.productservice.repositories.products.ProductRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -33,6 +32,14 @@ public class ProductController {
         this.productService = productService;
         this.productRepository = productRepository;
         this.authClient = authClient;
+    }
+
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Product>> getProducts(@RequestBody getProductsDto request){
+        return ResponseEntity.of(Optional.ofNullable(productService.getProducts(
+                request.getNumberOfResults(),
+                request.getOffset()
+        )));
     }
 
     @GetMapping("")
@@ -76,7 +83,7 @@ public class ProductController {
         ResponseEntity<Product> responseEntity = new ResponseEntity(
                 productService.getSingleProduct(productId),
                 headers,
-                HttpStatus.NOT_FOUND
+                HttpStatus.OK
         );
 
         return responseEntity;

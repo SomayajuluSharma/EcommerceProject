@@ -1,22 +1,5 @@
 package dev.stunning.productservice;
 
-import dev.stunning.productservice.Service.ProductService;
-import dev.stunning.productservice.Service.SelfProductService;
-import dev.stunning.productservice.models.Category;
-import dev.stunning.productservice.models.Product;
-import dev.stunning.productservice.repositories.CategoryRepository;
-import dev.stunning.productservice.repositories.ProductDBDto;
-import dev.stunning.productservice.repositories.ProductRepository;
-import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
-import java.util.List;
-import java.util.Optional;
-
 //@SpringBootTest
 //public class ProductTest {
 //    @Autowired
